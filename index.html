@@ -14,12 +14,15 @@
             <input type="number" id="saldo-awal" placeholder="Masukkan saldo awal">
             <button onclick="setSaldoAwal()">Set Saldo Awal</button>
         </div>
-        <div id="monthly-input-section">
-            <h2>Pemasukan dan Pengeluaran Per Bulan</h2>
-            <div id="monthly-inputs">
-                <!-- Input fields will be dynamically generated here -->
-            </div>
-            <button onclick="updateMonthlyData()">Update Data Bulanan</button>
+        <div id="pemasukan-section">
+            <h2>Pemasukan</h2>
+            <input type="number" id="pemasukan" placeholder="Masukkan jumlah pemasukan">
+            <button onclick="tambahPemasukan()">Tambah Pemasukan</button>
+        </div>
+        <div id="pengeluaran-section">
+            <h2>Pengeluaran</h2>
+            <input type="number" id="pengeluaran" placeholder="Masukkan jumlah pengeluaran">
+            <button onclick="tambahPengeluaran()">Tambah Pengeluaran</button>
         </div>
         <div id="target-section">
             <h2>Target Keuangan</h2>
@@ -28,6 +31,13 @@
         </div>
         <div id="chart-section">
             <canvas id="myChart"></canvas>
+        </div>
+        <div id="summary-section">
+            <h2>Ringkasan</h2>
+            <p>Saldo Awal: <span id="summary-saldo-awal">Rp0</span></p>
+            <p>Total Pemasukan: <span id="summary-pemasukan">Rp0</span></p>
+            <p>Total Pengeluaran: <span id="summary-pengeluaran">Rp0</span></p>
+            <p>Saldo Akhir: <span id="summary-saldo-akhir">Rp0</span></p>
         </div>
     </div>
     <script src="assets/chart.js"></script>
