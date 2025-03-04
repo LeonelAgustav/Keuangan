@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengelola Keuangan Pribadi</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Pengelola Keuangan Pribadi</h1>
+        <div id="saldo-section">
+            <h2>Saldo Awal</h2>
+            <input type="number" id="saldo-awal" placeholder="Masukkan saldo awal">
+            <button onclick="setSaldoAwal()">Set Saldo Awal</button>
+        </div>
+        <div id="monthly-input-section">
+            <h2>Pemasukan dan Pengeluaran Per Bulan</h2>
+            <div id="monthly-inputs">
+                <!-- Input fields will be dynamically generated here -->
+            </div>
+            <button onclick="updateMonthlyData()">Update Data Bulanan</button>
+        </div>
+        <div id="target-section">
+            <h2>Target Keuangan</h2>
+            <input type="number" id="target" placeholder="Masukkan target keuangan">
+            <button onclick="setTarget()">Set Target</button>
+        </div>
+        <div id="chart-section">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+    <script src="assets/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
