@@ -7,13 +7,11 @@
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      background: linear-gradient(135deg, #2980b9, #6dd5fa);
       color: white;
-      text-align: center;
       margin: 0;
       height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
     }
@@ -21,27 +19,27 @@
       background: rgba(255, 255, 255, 0.1);
       padding: 40px 60px;
       border-radius: 20px;
-      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       backdrop-filter: blur(10px);
+      text-align: center;
     }
     #clock {
-      font-size: 3em;
+      font-size: 4em;
       font-weight: bold;
+      letter-spacing: 4px;
       margin-bottom: 20px;
-      letter-spacing: 2px;
+      text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     }
     #alarm-status {
       font-size: 1.5em;
-      color: #ffcc00;
-      margin-top: 10px;
+      color: #ff6f61;
       opacity: 0;
       transition: opacity 0.5s ease-in-out;
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
     #alarm-status.active {
       opacity: 1;
-    }
-    audio {
-      display: none;
     }
     @keyframes blink {
       0%, 100% { opacity: 1; }
@@ -49,6 +47,9 @@
     }
     #alarm-status.blink {
       animation: blink 1s infinite;
+    }
+    audio {
+      display: none;
     }
   </style>
 </head>
