@@ -6,24 +6,58 @@
   <title>Alarm Setiap :45</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      color: white;
       text-align: center;
-      margin-top: 50px;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px 60px;
+      border-radius: 20px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
     }
     #clock {
-      font-size: 2em;
+      font-size: 3em;
+      font-weight: bold;
       margin-bottom: 20px;
+      letter-spacing: 2px;
     }
     #alarm-status {
-      font-size: 1.2em;
-      color: red;
+      font-size: 1.5em;
+      color: #ffcc00;
+      margin-top: 10px;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+    #alarm-status.active {
+      opacity: 1;
+    }
+    audio {
+      display: none;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    #alarm-status.blink {
+      animation: blink 1s infinite;
     }
   </style>
 </head>
 <body>
-  <div id="clock">00:00:00</div>
-  <div id="alarm-status"></div>
-  <audio id="alarm-sound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+  <div class="container">
+    <div id="clock">00:00:00</div>
+    <div id="alarm-status"></div>
+    <audio id="alarm-sound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+  </div>
 
   <script>
     function updateClock() {
@@ -43,12 +77,14 @@
       const alarmStatus = document.getElementById('alarm-status');
       const alarmSound = document.getElementById('alarm-sound');
 
-      alarmStatus.textContent = 'ALARMACTIVE!';
+      alarmStatus.textContent = 'ALARM AKTIF!';
+      alarmStatus.classList.add('active', 'blink');
       alarmSound.play();
 
       // Reset status after 5 seconds
       setTimeout(() => {
         alarmStatus.textContent = '';
+        alarmStatus.classList.remove('active', 'blink');
       }, 5000);
     }
 
