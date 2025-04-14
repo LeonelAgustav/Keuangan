@@ -3,218 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perhitungan Sisa Uang Bulanan</title>
+  <title>Alarm Setiap :45</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f9;
-      color: #333;
-    }
-    .container {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 20px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    h1 {
       text-align: center;
-      color: #4CAF50;
+      margin-top: 50px;
     }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+    #clock {
+      font-size: 2em;
+      margin-bottom: 20px;
     }
-    input, select, button {
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-    button {
-      background-color: #4CAF50;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    table, th, td {
-      border: 1px solid #ddd;
-    }
-    th, td {
-      padding: 10px;
-      text-align: center;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
-    .expense-list {
-      margin-top: 20px;
-    }
-    .expense-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px;
-      background: #f9f9f9;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      margin-bottom: 10px;
+    #alarm-status {
+      font-size: 1.2em;
+      color: red;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Perhitungan Sisa Uang Bulanan</h1>
-    <form id="inputForm">
-      <input type="number" id="initialMoney" placeholder="Uang Awal Bulan" required>
-      <input type="number" id="monthlyAddition" placeholder="Penambahan Bulanan (Gaji)" required>
-      <input type="number" id="goalMoney" placeholder="Target Tabungan" required>
-      <input type="text" id="expenseName" placeholder="Nama Pengeluaran" required>
-      <input type="number" id="expenseAmount" placeholder="Jumlah Pengeluaran" required>
-      <select id="expenseMonth" required>
-        <option value="">Bulan Ke-</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-        <option value="11">11</option>
-        <option value="12">12</option>
-      </select>
-      <button type="button" id="addExpenseButton">Tambah Pengeluaran ke List</button>
-      <button type="button" id="calculateButton">Hitung Sisa Uang</button>
-    </form>
-    <div class="expense-list" id="expenseList"></div>
-    <table id="resultTable" style="display: none;">
-      <thead>
-        <tr>
-          <th>Bulan</th>
-          <th>Uang Awal</th>
-          <th>Penambahan</th>
-          <th>Total Pengeluaran</th>
-          <th>Sisa Uang</th>
-          <th>Status Goal</th>
-        </tr>
-      </thead>
-      <tbody id="resultBody"></tbody>
-    </table>
-  </div>
+  <div id="clock">00:00:00</div>
+  <div id="alarm-status"></div>
+  <audio id="alarm-sound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script>
-    const supabaseUrl = 'https://xyfhnyobxlrnherlreho.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5ZmhueW9ieGxybmhlcmxyZWhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwMDY2MDMsImV4cCI6MjA1OTU4MjYwM30.1UKxe4liP8gBoqg9ECybrrNmCE80g0mojlUfxXQ5UMQ';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
 
-    let expenses = [];
-
-    document.getElementById('addExpenseButton').addEventListener('click', () => {
-      const name = document.getElementById('expenseName').value;
-      const amount = parseFloat(document.getElementById('expenseAmount').value);
-      const month = parseInt(document.getElementById('expenseMonth').value);
-
-      if (name && amount && month) {
-        expenses.push({ name, amount, month });
-        renderExpenses();
-        document.getElementById('expenseName').value = '';
-        document.getElementById('expenseAmount').value = '';
-        document.getElementById('expenseMonth').value = '';
-      } else {
-        alert('Harap lengkapi semua data pengeluaran.');
+      // Check if the current minute is 45
+      if (now.getMinutes() === 45 && now.getSeconds() === 0) {
+        triggerAlarm();
       }
-    });
-
-    function renderExpenses() {
-      const expenseList = document.getElementById('expenseList');
-      expenseList.innerHTML = '';
-      expenses.forEach((expense, index) => {
-        const div = document.createElement('div');
-        div.className = 'expense-item';
-        div.innerHTML = `
-          <span>${expense.name} - Rp${expense.amount.toLocaleString()} (Bulan ${expense.month})</span>
-          <button onclick="removeExpense(${index})">Hapus</button>
-        `;
-        expenseList.appendChild(div);
-      });
     }
 
-    function removeExpense(index) {
-      expenses.splice(index, 1);
-      renderExpenses();
+    function triggerAlarm() {
+      const alarmStatus = document.getElementById('alarm-status');
+      const alarmSound = document.getElementById('alarm-sound');
+
+      alarmStatus.textContent = 'ALARMACTIVE!';
+      alarmSound.play();
+
+      // Reset status after 5 seconds
+      setTimeout(() => {
+        alarmStatus.textContent = '';
+      }, 5000);
     }
 
-    document.getElementById('calculateButton').addEventListener('click', async () => {
-      const initialMoney = parseFloat(document.getElementById('initialMoney').value);
-      const monthlyAddition = parseFloat(document.getElementById('monthlyAddition').value);
-      const goalMoney = parseFloat(document.getElementById('goalMoney').value);
-
-      if (!initialMoney || !monthlyAddition || !goalMoney) {
-        alert('Harap lengkapi semua data.');
-        return;
-      }
-
-      const resultBody = document.getElementById('resultBody');
-      resultBody.innerHTML = '';
-
-      let currentMoney = initialMoney;
-      let goalAchieved = false;
-
-      for (let i = 1; i <= 12; i++) {
-        const totalExpenses = expenses.filter(e => e.month === i).reduce((sum, e) => sum + e.amount, 0);
-        currentMoney += monthlyAddition - totalExpenses;
-
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>Bulan ${i}</td>
-          <td>Rp${(initialMoney + (monthlyAddition * (i - 1))).toLocaleString()}</td>
-          <td>Rp${monthlyAddition.toLocaleString()}</td>
-          <td>Rp${totalExpenses.toLocaleString()}</td>
-          <td>Rp${currentMoney.toLocaleString()}</td>
-          <td>${currentMoney >= goalMoney ? '✅ Terpenuhi' : ''}</td>
-        `;
-        resultBody.appendChild(row);
-
-        if (!goalAchieved && currentMoney >= goalMoney) {
-          goalAchieved = true;
-        }
-      }
-
-      document.getElementById('resultTable').style.display = 'table';
-
-      // Save to Supabase
-      await supabase.from('calculations').insert([
-        {
-          initial_money: initialMoney,
-          monthly_addition: monthlyAddition,
-          goal_money: goalMoney,
-          expenses: expenses,
-          results: Array.from(resultBody.children).map(row => ({
-            month: row.cells[0].innerText,
-            start_money: row.cells[1].innerText,
-            addition: row.cells[2].innerText,
-            expenses: row.cells[3].innerText,
-            remaining: row.cells[4].innerText,
-            goal_status: row.cells[5].innerText
-          }))
-        }
-      ]);
-    });
+    setInterval(updateClock, 1000);
+    updateClock(); // Initial call to avoid delay
   </script>
 </body>
 </html>
